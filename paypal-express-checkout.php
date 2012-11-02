@@ -1,227 +1,59 @@
 <?php
-session_start();
 /*
 Plugin Name: PayPal Express Checkout
 Plugin URI: http://hccoder.info/
 Description: Easy integration of PayPal Express Checkout
 Author: hccoder - Sándor Fodor
-Version: 1.0
+Version: 2.0
 Author URI: http://hccoder.info/
 */
 
-$plugin_title = 'PayPal';
-$plugin_url = 'paypal-express-checkout';
-$plugin_menu = 'AddMenu';
+require 'classes/config.php';
+require 'classes/shortcode.php';
+require 'classes/paypal-express-checkout-admin.php';
 
-define( 'PAYPALPLUGIN', 'paypal-express-checkout' );
+/* Set base configuration */
+$config = HCCoder_PayPalConfig::getInstance();
 
-if ( ! class_exists( 'PluginSkeleton' ) ) {
-	if ( ! file_exists( ABSPATH.'wp-content/plugins/'.$plugin_url.'/lib/plugin.skeleton.php' ) )
-		die( 'Plugin Skeleton not found!' );
-		
-	require( ABSPATH.'wp-content/plugins/'.$plugin_url.'/lib/plugin.skeleton.php' );
-}
+$config->addItem('plugin_id', 'paypal-express-checkout');
+$config->addItem('plugin_configuration_id', 'paypal-express-checkout-configuration');
+$config->addItem('plugin_shortcode_id', 'paypal-express-checkout-shortcode');
+$config->addItem('plugin_help_id', 'paypal-express-checkout-help');
+$config->addItem('plugin_history_id', 'paypal-express-checkout-history');
+
+$config->addItem('plugin_path', plugin_dir_path(__FILE__));
+$config->addItem('views_path', $config->getItem('plugin_path').'views/');
+
+$config->addItem('plugin_url', home_url('/wp-admin/admin.php?page='.$config->getItem('plugin_id')));
+$config->addItem('plugin_configuration_url', home_url('/wp-admin/admin.php?page='.$config->getItem('plugin_configuration_id')));
+$config->addItem('plugin_shortcode_url', home_url('/wp-admin/admin.php?page='.$config->getItem('plugin_shortcode_id')));
+$config->addItem('plugin_help_url', home_url('/wp-admin/admin.php?page='.$config->getItem('plugin_help_id')));
+$config->addItem('plugin_history_url', home_url('/wp-admin/admin.php?page='.$config->getItem('plugin_history_id')));
+
+$config->addItem('plugin_form_handler_url', home_url('/wp-content/plugins/'.$config->getItem('plugin_id').'/form-handler.php'));
+
+$config->addItem('plugin_name', 'PayPal');
 
 /**
- * PayPal Express Checkout Plugin
+ * Create admin menus
  */
-class PayPal extends PluginSkeleton {
-	/**
-	 * admin interface for PayPal settings
-	 */
-	public function PluginAdmin() {
-		
-		// saving new configuration
-		if ( count($_POST) ) {
-			update_option('paypal_user', $_POST['api_user']);
-			update_option('paypal_pwd', $_POST['api_pwd']);
-			update_option('paypal_signature', $_POST['api_signature']);
-			update_option('paypal_url', $_POST['paypal_url']);
-			update_option('paypal_redirect_url', $_POST['paypal_redirect_url']);
-			update_option('paypal_start_page', $_POST['start_page']);
-			update_option('paypal_success_page', $_POST['success_page']);
-			update_option('paypal_success_url', $_POST['success_url']);
-			update_option('paypal_cancel_page', $_POST['cancel_page']);
-			update_option('paypal_cancel_url', $_POST['cancel_url']);
-		}
-		
-		// load admin interface
-		require('views/admin.php');
-	} // PluginAdmin()
-	
-	
-	/**
-	 * start express checkout
-	 */
-	function StartExpressCheckout() {
-		// FIELDS
-		$fields = array(
-            'USER'=>urlencode(get_option('paypal_user')),
-            'PWD'=>urlencode(get_option('paypal_pwd')),
-            'SIGNATURE'=>urlencode(get_option('paypal_signature')),
-            'VERSION'=>urlencode('72.0'),
-            'PAYMENTREQUEST_0_PAYMENTACTION'=>urlencode('Sale'),
-            'PAYMENTREQUEST_0_AMT'=>urlencode($_POST['AMT']),
-            'RETURNURL'=>urlencode(get_option('paypal_success_url')),
-            'CANCELURL'=>urlencode(get_option('paypal_cancel_url')),
-            'METHOD'=>urlencode('SetExpressCheckout')
-        );
-        
-    foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-		rtrim($fields_string,'&');
-		
-		// CURL
-		$ch = curl_init();
-		curl_setopt($ch,CURLOPT_URL, get_option('paypal_url'));
-		curl_setopt($ch,CURLOPT_POST,count($fields));
-		curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-		
-		//execute post
-		$result = curl_exec($ch);
-		//close connection
-		curl_close($ch);
-		
-		parse_str($result, $result);
-		
-		if ( $result['ACK'] == 'Success' ) {
-			header('Location: https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token='.$result['TOKEN']);
-			exit;
-		} else {
-			PayPal::LogPPError( $result );
-		}
-	} // StartExpressCheckout()
-	
-	
-	/**
-	 * validate payment
-	 */
-	function ConfirmExpressCheckout() {
-		// FIELDS
-		$fields = array(
-            'USER'=>urlencode(get_option('paypal_user')),
-            'PWD'=>urlencode(get_option('paypal_pwd')),
-            'SIGNATURE'=>urlencode(get_option('paypal_signature')),
-            'VERSION'=>urlencode('72.0'),
-            'TOKEN'=>urlencode($_GET['token']),
-            'METHOD'=>urlencode('GetExpressCheckoutDetails')
-        );
-        
-    foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-		rtrim($fields_string,'&');
-		
-		// CURL
-		$ch = curl_init();
-		curl_setopt($ch,CURLOPT_URL, get_option('paypal_url'));
-		curl_setopt($ch,CURLOPT_POST,count($fields));
-		curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-		
-		//execute post
-		$result = curl_exec($ch);
-		//close connection
-		curl_close($ch);
-		
-		parse_str($result, $result);
-		
-		if ( $result['ACK'] == 'Success' ) {
-			PayPal::DoExpressCheckout($result);
-		} else {
-			PayPal::LogPPError( $result );
-		}
-	} // ConfirmExpressCheckout()
-	
-	
-	/**
-	 * completing payment
-	 */
-	function DoExpressCheckout($result) {
-		// FIELDS
-		$fields = array(
-            'USER'=>urlencode(get_option('paypal_user')),
-            'PWD'=>urlencode(get_option('paypal_pwd')),
-            'SIGNATURE'=>urlencode(get_option('paypal_signature')),
-            'VERSION'=>urlencode('72.0'),
-            'PAYMENTREQUEST_0_PAYMENTACTION'=>urlencode('Sale'),
-            'PAYERID'=>urlencode($result['PAYERID']),
-            'TOKEN'=>urlencode($result['TOKEN']),
-            'PAYMENTREQUEST_0_AMT'=>urlencode($_SESSION['AMT']),
-            'METHOD'=>urlencode('DoExpressCheckoutPayment')
-        );
-        
-    foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-		rtrim($fields_string,'&');
-		
-		// CURL
-		$ch = curl_init();
-		curl_setopt($ch,CURLOPT_URL, get_option('paypal_url'));
-		curl_setopt($ch,CURLOPT_POST,count($fields));
-		curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-		
-		//execute post
-		$result = curl_exec($ch);
-		//close connection
-		curl_close($ch);
-		
-		parse_str($result, $result);
-		
-		if ( $result['ACK'] == 'Success' ) {
-			PayPal::LogPPSucces( $result );
-			
-			$balance = get_user_meta(get_current_user_id(), 'balance', true);
-			$balance += $_SESSION['AMT'];
-			update_user_meta(get_current_user_id(), 'balance', $balance);
-		} else {
-			PayPal::LogPPError( $result );
-		}
-	} // DoExpressCheckout($result)
-	
-	/**
-	 * if we got error log it
-	 */
-	function LogPPError($msg) {
-		
-		$log = "";
-		foreach ( $msg as $key => $value )
-			$log .= "$key = $value\n";
-		
-		$fn = ABSPATH.'wp-content/plugins/'.PAYPALPLUGIN.'/logs/failed/'.date('Y-m-d H:i').'.php';
-		file_put_contents( $fn, $log );
-	} // LogPPError()
-	
-	/**
-	 * log the succesfull payments
-	 */
-	function LogPPSucces($msg) {
-		$log = "";
-		foreach ( $msg as $key => $value )
-			$log .= "$key = $value\n";
-			
-		$fn = ABSPATH.'wp-content/plugins/'.PAYPALPLUGIN.'/logs/successful/'.date('Y-m-d H:i').'.php';
-		file_put_contents( $fn, $log );
-	} // LogPPSucces()
-	
-} // PayPal
-$pp = new PayPal( $plugin_url, $plugin_title, $plugin_menu );
-
-// redirect hooks for payment
-add_action('template_redirect', 'process_paypal_start');
-function process_paypal_start() {
-	
-	// start checkout
-	if ( get_option('paypal_start_page') != FALSE && is_page( get_option('paypal_start_page') ) && isset($_POST['AMT'] ) ) {
-		
-		$_SESSION['AMT'] = $_POST['AMT'];
- 		PayPal::StartExpressCheckout();
- 	
-	} 
-	
-	// confirm payment
-	if ( get_option('paypal_start_page') != FALSE && is_page( get_option('paypal_success_page') ) ) {
-		
- 		PayPal::ConfirmExpressCheckout();
- 	
-	}
-	
+function paypal_express_checkout_admin_menu() {
+  $config = HCCoder_PayPalConfig::getInstance();
+  
+  add_menu_page($config->getItem('plugin_name'), $config->getItem('plugin_name'), 'level_10', $config->getItem('plugin_id'), array('HCCoder_PayPalExpressCheckoutAdmin', 'adminIndex'), home_url('/wp-content/plugins/'.$config->getItem('plugin_id').'/static/images/icon.png'));
+  add_submenu_page($config->getItem('plugin_id'), 'Configuration', 'Configuration', 'level_10', $config->getItem('plugin_configuration_id'), array('HCCoder_PayPalExpressCheckoutAdmin', 'adminConfiguration'));
+  add_submenu_page($config->getItem('plugin_id'), 'Shortcode', 'Shortcode', 'level_10', $config->getItem('plugin_shortcode_id'), array('HCCoder_PayPalExpressCheckoutAdmin', 'adminShortcode'));
+  add_submenu_page($config->getItem('plugin_id'), 'Payments history', 'Payments history', 'level_10', $config->getItem('plugin_history_id'), array('HCCoder_PayPalExpressCheckoutAdmin', 'adminHistory'));
+  add_submenu_page($config->getItem('plugin_id'), 'Help', 'Help', 'level_10', $config->getItem('plugin_help_id'), array('HCCoder_PayPalExpressCheckoutAdmin', 'adminHelp'));
 }
+add_action('admin_menu', 'paypal_express_checkout_admin_menu');
+
+/**
+ * Create shortcode
+ */
+add_shortcode('paypal', array('HCCoder_PayPalShortcode', 'frontendIndex'));
+
+/**
+ * Create table for payment history on plugin activation
+ */
+register_activation_hook(__FILE__, array('HCCoder_PayPalExpressCheckoutAdmin', 'pluginInstall'));
