@@ -4,7 +4,7 @@ Donate link:
 Tags: paypal, payments, express checkout
 Requires at least: 3.0.0
 Tested up to: 3.4.2
-Stable tag: 2.0
+Stable tag: 2.0.1
 
 Easily add PayPal express checkout possibility to your WordPres powered blog. You can configure all options on WP Admin interface.
 
@@ -30,6 +30,9 @@ Yes, you can, you find instructions on the plugin's settings page.
 4. Payment details
 
 == Changelog ==
+
+= 2.0.1 =
+* Small bugfixes
 
 = 2.0 =
 * Completely redesigned user interface

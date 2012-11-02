@@ -4,13 +4,13 @@ Plugin Name: PayPal Express Checkout
 Plugin URI: http://hccoder.info/
 Description: Easy integration of PayPal Express Checkout
 Author: hccoder - Sándor Fodor
-Version: 2.0
+Version: 2.0.1
 Author URI: http://hccoder.info/
 */
 
-require 'classes/config.php';
-require 'classes/shortcode.php';
-require 'classes/paypal-express-checkout-admin.php';
+require ABSPATH.'wp-content/plugins/paypal-express-checkout/classes/config.php';
+require ABSPATH.'wp-content/plugins/paypal-express-checkout/classes/shortcode.php';
+require ABSPATH.'wp-content/plugins/paypal-express-checkout/classes/paypal-express-checkout-admin.php';
 
 /* Set base configuration */
 $config = HCCoder_PayPalConfig::getInstance();

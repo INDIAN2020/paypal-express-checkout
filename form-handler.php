@@ -3,7 +3,7 @@
  * Form posting handler
  */
 require '../../../wp-load.php';
-require 'classes/paypalapi.php';
+require ABSPATH.'wp-content/plugins/paypal-express-checkout/classes/paypalapi.php';
 
 if ( isset($_GET['func']) && $_GET['func'] == 'confirm' && isset($_GET['token']) && isset($_GET['PayerID']) ) {
   HCCoder_PayPalAPI::ConfirmExpressCheckout();
