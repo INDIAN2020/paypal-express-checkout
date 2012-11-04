@@ -4,7 +4,7 @@ Plugin Name: PayPal Express Checkout
 Plugin URI: http://hccoder.info/
 Description: Easy integration of PayPal Express Checkout
 Author: hccoder - Sándor Fodor
-Version: 2.0.1
+Version: 2.1.0
 Author URI: http://hccoder.info/
 */
 

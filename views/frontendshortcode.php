@@ -4,6 +4,23 @@
   <?php if ( isset($atts['description']) ) { ?>
     <input type="hidden" name="PAYMENTREQUEST_0_DESC" value="<?php echo $atts['description']; ?>" />
   <?php } ?>
+  
+  <?php if ( isset($atts['tax']) ) { ?>
+    <input type="hidden" name="TAXAMT" value="<?php echo $atts['tax']; ?>" />
+  <?php } ?>
+  
+  <?php if ( isset($atts['shipping']) ) { ?>
+    <input type="hidden" name="SHIPPINGAMT" value="<?php echo $atts['shipping']; ?>" />
+  <?php } ?>
+  
+  <?php if ( isset($atts['handling']) ) { ?>
+    <input type="hidden" name="HANDLINGAMT" value="<?php echo $atts['handling']; ?>" />
+  <?php } ?>
+  
+  <?php if ( isset($atts['qty']) ) { ?>
+    <input type="hidden" name="PAYMENTREQUEST_0_QTY" value="<?php echo $atts['qty']; ?>" />
+  <?php } ?>
+  
   <input type="hidden" name="func" value="start" />
   <input type="submit" value="Pay with PayPal" />
 </form>

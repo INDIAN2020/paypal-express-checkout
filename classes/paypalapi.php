@@ -13,6 +13,15 @@ if ( ! class_exists('HCCoder_PayPalAPI') ) {
       
       $config = HCCoder_PayPalConfig::getInstance();
       
+      if ( get_option('paypal_environment') != 'sandbox' && get_option('paypal_environment') != 'live' )
+        trigger_error('Environment does not defined! Please define it at the plugin configuration page!', E_USER_ERROR);
+      
+      if ( get_option('paypal_cancel_page') === FALSE || ! is_numeric(get_option('paypal_cancel_page')) )
+        trigger_error('Cancel page not defined! Please define it at the plugin configuration page!', E_USER_ERROR);
+      
+      if ( get_option('paypal_success_page') === FALSE || ! is_numeric(get_option('paypal_success_page')) )
+        trigger_error('Success page not defined! Please define it at the plugin configuration page!', E_USER_ERROR);
+      
       // FIELDS
       $fields = array(
               'USER' => urlencode(get_option('paypal_api_username')),
@@ -20,7 +29,9 @@ if ( ! class_exists('HCCoder_PayPalAPI') ) {
               'SIGNATURE' => urlencode(get_option('paypal_api_signature')),
               'VERSION' => urlencode('72.0'),
               'PAYMENTREQUEST_0_PAYMENTACTION' => urlencode('Sale'),
+              'PAYMENTREQUEST_0_AMT0' => urlencode($_POST['AMT']),
               'PAYMENTREQUEST_0_AMT' => urlencode($_POST['AMT']),
+              'PAYMENTREQUEST_0_ITEMAMT' => urlencode($_POST['AMT']),
               'ITEMAMT' => urlencode($_POST['AMT']),
               'PAYMENTREQUEST_0_CURRENCYCODE' => urlencode($_POST['CURRENCYCODE']),
               'RETURNURL' => urlencode($config->getItem('plugin_form_handler_url').'?func=confirm'),
@@ -30,6 +41,31 @@ if ( ! class_exists('HCCoder_PayPalAPI') ) {
       
       if ( isset($_POST['PAYMENTREQUEST_0_DESC']) )
         $fields['PAYMENTREQUEST_0_DESC'] = $_POST['PAYMENTREQUEST_0_DESC'];
+      
+      if ( isset($_POST['PAYMENTREQUEST_0_QTY']) ) {
+        $fields['PAYMENTREQUEST_0_QTY0'] = $_POST['PAYMENTREQUEST_0_QTY'];
+        $fields['PAYMENTREQUEST_0_AMT'] = $fields['PAYMENTREQUEST_0_AMT'] * $_POST['PAYMENTREQUEST_0_QTY'];
+        $fields['PAYMENTREQUEST_0_ITEMAMT'] = $fields['PAYMENTREQUEST_0_ITEMAMT'] * $_POST['PAYMENTREQUEST_0_QTY'];
+        $fields['ITEMAMT'] = $fields['ITEMAMT'] * $_POST['PAYMENTREQUEST_0_QTY'];
+        
+      }
+      
+      
+      if ( isset($_POST['TAXAMT']) ) {
+        $fields['PAYMENTREQUEST_0_TAXAMT'] = $_POST['TAXAMT'];
+        $fields['PAYMENTREQUEST_0_AMT'] += $_POST['TAXAMT'];
+      }
+      
+            
+      if ( isset($_POST['HANDLINGAMT']) ) {
+        $fields['PAYMENTREQUEST_0_HANDLINGAMT'] = $_POST['HANDLINGAMT'];
+        $fields['PAYMENTREQUEST_0_AMT'] += $_POST['HANDLINGAMT'];
+      }
+            
+      if ( isset($_POST['SHIPPINGAMT']) ) {
+        $fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = $_POST['SHIPPINGAMT'];
+        $fields['PAYMENTREQUEST_0_AMT'] += $_POST['SHIPPINGAMT'];
+      }
       
       $fields_string = '';
 

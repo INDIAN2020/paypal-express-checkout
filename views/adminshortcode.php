@@ -10,19 +10,32 @@
       You can easily add PayPal Express Checkout to your pages with shortcode. Here you can see the shortcode options.<br />
       If you need help visit the <a href="<?php echo $config->getItem('plugin_help_url'); ?>" title="PayPal Help">Help</a> page.
     </p>
-    <p>&nbsp;</p>
+    
+    <h3>Example #1</h3>
     <p>
-      <strong>Example #1</strong>(pay 30 USD)<br />
       [paypal amount=30 currency=USD]
     </p>
-    
     <p>
       Here you can found the supported currencies and currency codes. <a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_nvp_currency_codes" target="_blank" title="Supported currencies">Supported currencies</a>.
     </p>
-    <p>&nbsp;</p>
+    
+    <h3>Example #2</h3>
     <p>
-      <strong>Example #2</strong>(pay 30 EUR + add description)<br />
       [paypal amount=30 currency=USD description="Buying item SKU:TEST_ITEM_SKU"]
+    </p>
+    
+    <h3>Example #3</h3>
+    <p>
+      [paypal amount=30 currency=USD description="Buying item SKU:TEST_ITEM_SKU" tax=2 shipping=5 handling=1]
+    </p>
+    <p>
+      If you want to pass floats in amount pass them in the following way:<br />
+      [paypal amount="19.9" currency=USD description="Buying item SKU:TAX + HANDLING + SHIPPING" tax="1.9" shipping="3.9" handling="0.9"]
+    </p>
+    
+    <h3>Example #4</h3>
+    <p>
+      [paypal amount=10 currency=USD description="Buying item SKU: QUANTITY = 4" qty=4]
     </p>
   <?php } ?>
 </div><!-- .wrap -->
