@@ -1,7 +1,7 @@
 === PayPal Express Checkout ===
 Contributors: hccoder
 Donate link: 
-Tags: paypal, payments, express checkout
+Tags: paypal, payments, express checkout, paypal shortcode
 Requires at least: 3.0.0
 Tested up to: 3.4.2
 Stable tag: 2.0.1
@@ -11,6 +11,14 @@ Easily add PayPal express checkout possibility to your WordPres powered blog. Yo
 == Description ==
 
 You can add PayPal Express Checkout possibility to your site in a few steps. Install the plugin, go to the PayPal menu and follow the instructions to setup your payments.
+
+Features:
+* Easy and quick configuration
+* Shortcode to create Buy Now buttons with lots of parameters
+* Tested with WordPress 3.4.2
+* Payments history storing all payments
+* You can view the payment details with all data gathered from PayPal
+* Custom thank you page for successful and failed payments
 
 == Installation ==
 
