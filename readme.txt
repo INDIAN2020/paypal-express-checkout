@@ -12,13 +12,21 @@ Easily add PayPal express checkout possibility to your WordPres powered blog. Yo
 
 You can add PayPal Express Checkout possibility to your site in a few steps. Install the plugin, go to the PayPal menu and follow the instructions to setup your payments.
 
-Features:
+= Features =
 * Easy and quick configuration
 * Shortcode to create Buy Now buttons with lots of parameters
 * Tested with WordPress 3.4.2
 * Payments history storing all payments
 * You can view the payment details with all data gathered from PayPal
 * Custom thank you page for successful and failed payments
+
+= Supported parameters for shortcode =
+* multi-currency support
+* item description
+* specifiy tax amount
+* specifiy handling amount
+* specifiy shipping amount
+* specifiy item quantity
 
 == Installation ==
 
@@ -29,6 +37,14 @@ Unzip the plugin and copy the paypal-express-checkout folder to your wp-content/
 = Can I test with PayPal sandbox? =
 
 Yes, you can, you find instructions on the plugin's settings page.
+
+= What type of PayPal account do I need to use this plugin? =
+
+You need a verified business acount.
+
+= Can I track the payments with this plugin? =
+
+Yes, you can, you can see the payments in the WP Admin area and on your PayPal dashboard too.
 
 == Screenshots ==
 
