@@ -4,7 +4,7 @@ Donate link:
 Tags: paypal, payments, express checkout, paypal shortcode
 Requires at least: 3.0.0
 Tested up to: 3.4.2
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 
 Easily add PayPal express checkout possibility to your WordPres powered blog. You can configure all options on WP Admin interface.
 
@@ -27,6 +27,12 @@ You can add PayPal Express Checkout possibility to your site in a few steps. Ins
 * specifiy handling amount
 * specifiy shipping amount
 * specifiy item quantity
+* return URL
+* cancel URL
+
+= System requirements =
+* PHP session support
+* PHP cURL library
 
 == Installation ==
 
@@ -54,6 +60,10 @@ Yes, you can, you can see the payments in the WP Admin area and on your PayPal d
 4. Payment details
 
 == Changelog ==
+
+= 2.1.1 =
+* Now you can define return and cancel URL in shortcode
+* Tested with WordPress 3.5 Beta 2 and works fine
 
 = 2.1.0 =
 * Error handling extended

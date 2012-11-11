@@ -37,5 +37,11 @@
     <p>
       [paypal amount=10 currency=USD description="Buying item SKU: QUANTITY = 4" qty=4]
     </p>
+    
+    <h3>Example #5</h3>
+    <p><i>Add custom return and cancel URL to your buttons.</i></p>
+    <p>
+      [paypal amount=10 currency=USD return_url="http://hccoder.info/" cancel_url="http://www.google.com"]
+    </p>
   <?php } ?>
 </div><!-- .wrap -->

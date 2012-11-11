@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 /**
  * PayPal API
  */
@@ -41,6 +43,12 @@ if ( ! class_exists('HCCoder_PayPalAPI') ) {
       
       if ( isset($_POST['PAYMENTREQUEST_0_DESC']) )
         $fields['PAYMENTREQUEST_0_DESC'] = $_POST['PAYMENTREQUEST_0_DESC'];
+      
+      if ( isset($_POST['RETURN_URL']) )
+        $_SESSION['RETURN_URL'] = $_POST['RETURN_URL'];
+      
+      if ( isset($_POST['CANCEL_URL']) )
+        $fields['CANCELURL'] = $_POST['CANCEL_URL'];
       
       if ( isset($_POST['PAYMENTREQUEST_0_QTY']) ) {
         $fields['PAYMENTREQUEST_0_QTY0'] = $_POST['PAYMENTREQUEST_0_QTY'];

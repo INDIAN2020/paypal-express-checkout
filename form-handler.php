@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
  * Form posting handler
  */
@@ -7,6 +8,14 @@ require ABSPATH.'wp-content/plugins/paypal-express-checkout/classes/paypalapi.ph
 
 if ( isset($_GET['func']) && $_GET['func'] == 'confirm' && isset($_GET['token']) && isset($_GET['PayerID']) ) {
   HCCoder_PayPalAPI::ConfirmExpressCheckout();
+  
+  if ( isset( $_SESSION['RETURN_URL'] ) ) {
+    $url = $_SESSION['RETURN_URL'];
+    unset($_SESSION['RETURN_URL']);
+    header('Location: '.$url);
+    exit;
+  }
+  
   if ( is_numeric(get_option('paypal_success_page')) && get_option('paypal_success_page') > 0 )
     header('Location: '.get_permalink(get_option('paypal_success_page')));
   else

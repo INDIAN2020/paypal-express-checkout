@@ -21,6 +21,14 @@
     <input type="hidden" name="PAYMENTREQUEST_0_QTY" value="<?php echo $atts['qty']; ?>" />
   <?php } ?>
   
+  <?php if ( isset($atts['return_url']) ) { ?>
+    <input type="hidden" name="RETURN_URL" value="<?php echo $atts['return_url']; ?>" />
+  <?php } ?>
+  
+  <?php if ( isset($atts['cancel_url']) ) { ?>
+    <input type="hidden" name="CANCEL_URL" value="<?php echo $atts['cancel_url']; ?>" />
+  <?php } ?>
+  
   <input type="hidden" name="func" value="start" />
   <input type="submit" value="Pay with PayPal" />
 </form>
