@@ -4,7 +4,7 @@ Plugin Name: PayPal Express Checkout
 Plugin URI: http://hccoder.info/
 Description: Easy integration of PayPal Express Checkout
 Author: hccoder - Sándor Fodor
-Version: 2.1.1
+Version: 2.1.2
 Author URI: http://hccoder.info/
 */
 
@@ -33,6 +33,9 @@ $config->addItem('plugin_history_url', home_url('/wp-admin/admin.php?page='.$con
 $config->addItem('plugin_form_handler_url', home_url('/wp-content/plugins/'.$config->getItem('plugin_id').'/form-handler.php'));
 
 $config->addItem('plugin_name', 'PayPal');
+
+$config->addItem('buy_now_button_src', 'http://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif');
+$config->addItem('checkout_button_src', 'https://www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif');
 
 /**
  * Create admin menus

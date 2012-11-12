@@ -43,5 +43,27 @@
     <p>
       [paypal amount=10 currency=USD return_url="http://hccoder.info/" cancel_url="http://www.google.com"]
     </p>
+    
+    <h3>Example #6</h3>
+    <p><i>Customize button style.</i></p>
+    <p>
+      <strong>Buy now button:</strong><br />
+      [paypal amount=10 currency=USD button_style="buy_now"]
+    </p>
+    <p>
+      <strong>Output:</strong><br />
+      <img src="<?php echo $config->getItem('buy_now_button_src'); ?>" />
+    </p>
+    
+    <p>
+      <strong>Checkout with PayPal button:</strong><br />
+      [paypal amount=10 currency=USD button_style="checkout"]
+    </p>
+    <p>
+      <strong>Output:</strong><br />
+      <img src="<?php echo $config->getItem('checkout_button_src'); ?>" />
+    </p>
+    
+    
   <?php } ?>
 </div><!-- .wrap -->

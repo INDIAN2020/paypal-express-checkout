@@ -30,5 +30,14 @@
   <?php } ?>
   
   <input type="hidden" name="func" value="start" />
-  <input type="submit" value="Pay with PayPal" />
+  
+  <?php if ( isset($atts['button_style']) ) { ?>
+    <?php if ( $atts['button_style'] == 'buy_now' ) { ?>
+      <input type="image" value="" src="<?php echo $config->getItem('buy_now_button_src'); ?>" />
+    <?php } elseif ( $atts['button_style'] == 'checkout' ) { ?>
+      <input type="image" value="" src="<?php echo $config->getItem('checkout_button_src'); ?>" />
+    <?php } ?>
+  <?php } else { ?>
+    <input type="submit" value="Pay with PayPal" />
+  <?php } ?>
 </form>
